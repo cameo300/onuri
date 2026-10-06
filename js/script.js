@@ -296,12 +296,12 @@ function initSlider() {
     #worksMobileControls #worksPageStatus { margin: 0; min-width: 100px; }
     #worksMobileControls button {
       display: inline-flex !important; align-items: center; justify-content: center;
-      width: 48px; height: 48px; padding: 0; border: 1px solid #555;
-      border-radius: 50%; background: #fff; color: #222; cursor: pointer;
+      width: 48px; height: 48px; padding: 0; border: 1px solid var(--line);
+      border-radius: 50%; background: var(--saffron); color: var(--ink); cursor: pointer;
       position: static; opacity: 1; visibility: visible; touch-action: manipulation;
     }
     #worksMobileControls button:disabled { opacity: 0.35; cursor: default; }
-    #worksMobileControls button:focus-visible { outline: 3px solid #2699a5; outline-offset: 3px; }
+    #worksMobileControls button:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
     #worksMobileControls svg { display: block; width: 24px; height: 24px; }
 
     @media (max-width: 650px) {
