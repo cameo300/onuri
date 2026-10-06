@@ -409,15 +409,16 @@ function initMenu() {
 }
 
 document.getElementById("shareBtn")?.addEventListener("click", async () => {
+  const shareUrl = "https://cameo300.github.io/onuri";
   const shareData = {
     title: "김현미 | Digital Maker · AI Instructor",
     text: "AI로 상상하고, 디지털 기술로 만들어갑니다.",
-    url: location.href
+    url: shareUrl
   };
   if (navigator.share) {
     try { await navigator.share(shareData); } catch (e) {}
   } else {
-    await navigator.clipboard?.writeText(location.href);
+    await navigator.clipboard?.writeText(shareUrl);
     alert("디지털 명함 주소가 복사되었습니다.");
   }
 });
