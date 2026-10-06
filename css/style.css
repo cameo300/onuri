@@ -55,6 +55,15 @@ footer{text-align:center;padding:25px;font:10px "Montserrat";color:#78919a;borde
   .works-top{align-items:start;flex-direction:column}.contact-card{padding:32px 25px}.contact-card h2{font-size:30px}
 }
 
+.making-icon{
+  display:block;
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  margin:16px 0 0;
+}
+.making-card h3{margin:18px 0 12px}
+
 /* ===== MY WORKS : slider / search / tags ===== */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .works-search{position:relative;width:min(360px,100%);margin-top:10px}
@@ -113,7 +122,7 @@ footer{text-align:center;padding:25px;font:10px "Montserrat";color:#78919a;borde
 }
 .contact-photo .profile-photo{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center;
+  object-fit:contain;object-position:center;
   display:none;
 }
 .contact-photo-fallback{
@@ -122,4 +131,33 @@ footer{text-align:center;padding:25px;font:10px "Montserrat";color:#78919a;borde
 }
 @media(max-width:650px){
   .contact-photo{max-width:100%}
+}
+
+/* PC: 왼쪽 타이틀/작가 정보, 오른쪽 큰 사진. 모바일: 타이틀/사진/정보 순서. */
+.contact-card{
+  grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+  grid-template-areas:"title photo" "info photo";
+  gap:28px 40px;
+  align-items:start;
+}
+.contact-title{grid-area:title}
+.contact-info{grid-area:info;min-width:0}
+.contact-card .contact-photo{
+  grid-area:photo;
+  max-width:none;
+  aspect-ratio:4/5;
+  align-self:stretch;
+  margin-bottom:0;
+}
+.contact-actions{flex-wrap:wrap}
+@media(max-width:650px){
+  .contact-card{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"title" "photo" "info";
+    gap:25px;
+  }
+  .contact-card .contact-photo{
+    aspect-ratio:4/3;
+    margin-bottom:0;
+  }
 }

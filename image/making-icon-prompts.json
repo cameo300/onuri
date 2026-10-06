@@ -1,0 +1,29 @@
+{
+  "mode": "built-in image_gen",
+  "images": [
+    {
+      "file": "making-icon-ai-character.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one friendly original mascot face with a tiny sparkle. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    },
+    {
+      "file": "making-icon-3d-printing.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one compact desktop 3D printer with a tiny cube inside. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    },
+    {
+      "file": "making-icon-laser-making.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one acrylic flower keychain with a small engraving sparkle. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    },
+    {
+      "file": "making-icon-resin-art.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one translucent resin heart charm with tiny glitter. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    },
+    {
+      "file": "making-icon-digital-design.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one pen nib over a small graphic design artboard. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    },
+    {
+      "file": "making-icon-digital-stationery.png",
+      "prompt": "Create a single small representative icon for a maker portfolio service card: one tablet showing a simple planner grid with a stylus. Minimal polished rounded illustrated icon, mint teal and pale aqua with dark teal outlines and a tiny peach accent. One simple centered object, readable at 80 pixels, flat front view, very few details, generous transparent padding. Square canvas. Actual transparent background. No room scene, no desk, no landscape, no decorative environment, no text, no letters, no logo, no watermark."
+    }
+  ]
+}

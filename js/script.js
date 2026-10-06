@@ -84,27 +84,28 @@ function findNamedImage(name) {
 
 /*
   홈(hero)과 연락처(contact) 영역의 프로필 사진을 채워 넣습니다.
-  image/profile.jpg (또는 png/webp/gif) 파일 하나만 넣으면
+  홈은 image/profile1.*, 연락처는 image/profile2.* 사진을 사용합니다.
   홈에서는 세로(3:4), 연락처에서는 가로(4:3) 비율로 자동으로 잘려서 보입니다.
   이미지가 없으면 기존 이니셜 아바타(HM)가 그대로 보입니다.
 */
 async function loadProfilePhoto() {
-  const src = await findNamedImage("profile");
-  if (!src) return;
-
   const slots = [
     { imgId: "profilePhotoImg", fallbackId: "profileFallback" },
     { imgId: "contactPhotoImg", fallbackId: "contactFallback" }
   ];
 
-  slots.forEach(({ imgId, fallbackId }) => {
+  await Promise.all(slots.map(async ({ imgId, fallbackId }) => {
     const img = document.getElementById(imgId);
     const fallback = document.getElementById(fallbackId);
     if (!img) return;
+    img.style.display = "none";
+    if (fallback) fallback.style.display = "flex";
+    const src = await findNamedImage(img.dataset.photoName);
+    if (!src) return;
     img.src = src;
     img.style.display = "block";
     if (fallback) fallback.style.display = "none";
-  });
+  }));
 }
 
 async function loadWorks() {
