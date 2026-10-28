@@ -1,4 +1,4 @@
-const MAX_WORKS = 30;
+const MAX_WORKS = 15;
 const extensions = ["jpg", "jpeg", "png", "webp", "gif"];
 const categoryNames = { ai: "AI", "3d": "3D PRINT", laser: "LASER", resin: "RESIN", stationery: "DIGITAL STATIONERY" };
 
@@ -41,23 +41,7 @@ function titleFromFilename(filename) {
   Image()의 onload/onerror를 사용하므로
   HTML 파일을 직접 열어도 work-01.jpg 같은 이미지가 감지됩니다.
 */
-function findImage(index) {
-  return new Promise(resolve => {
-    let extIndex = 0;
-    const test = () => {
-      if (extIndex >= extensions.length) {
-        resolve(null);
-        return;
-      }
-      const src = `image/work-${String(index).padStart(2, "0")}.${extensions[extIndex++]}`;
-      const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = test;
-      img.src = src;
-    };
-    test();
-  });
-}
+function findImage(index) { return Promise.resolve(`image/work-${String(index).padStart(2,'0')}.${[7,8].includes(index)?'jpg':'png'}`); }
 
 /*
   work-01, work-02 처럼 번호가 아니라
@@ -170,7 +154,7 @@ function renderWorks(items) {
     card.className = "work-card";
     card.dataset.category = item.category;
     card.innerHTML = `
-      <div class="work-image-box"><img class="work-image" src="${item.src}" alt="${escapeHtml(item.title)}" loading="${MOBILE_WORKS_QUERY.matches ? 'eager' : 'lazy'}"></div>
+      <button type="button" class="work-image-box" data-work="${item.index}" aria-label="${escapeHtml(item.title)} 확대 보기"><img class="work-image" src="${item.src}" alt="${escapeHtml(item.title)}" loading="${MOBILE_WORKS_QUERY.matches ? 'eager' : 'lazy'}"></button>
       <div class="work-content">
         <div class="category">${categoryNames[item.category]}</div>
         <h3>${escapeHtml(item.title)}</h3>
@@ -405,11 +389,11 @@ function initMenu() {
     const open = nav.classList.toggle("open");
     toggle.setAttribute("aria-expanded", open);
   });
-  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {nav.classList.remove("open");toggle.setAttribute("aria-expanded","false");}));
 }
 
 document.getElementById("shareBtn")?.addEventListener("click", async () => {
-  const shareUrl = "https://cameo300.github.io/onuri";
+  const shareUrl = window.location.href.split("#")[0];
   const shareData = {
     title: "김현미 | Digital Maker · AI Instructor",
     text: "AI로 상상하고, 디지털 기술로 만들어갑니다.",
@@ -429,3 +413,19 @@ initSlider();
 initMenu();
 loadProfilePhoto();
 loadWorks();
+
+const lightbox=document.getElementById('lightbox');let currentWork=0;let lastFocus=null;
+function showWork(index){currentWork=(index+visibleWorks.length)%visibleWorks.length;const item=visibleWorks[currentWork];document.getElementById('lightbox-img').src=item.src;document.getElementById('lightbox-img').alt=item.title;document.getElementById('lightbox-title').textContent=item.title;document.getElementById('lightbox-desc').textContent=item.description;document.getElementById('lightbox-count').textContent=`${currentWork+1} / ${visibleWorks.length}`;document.getElementById('lightbox-original').href=item.src;document.getElementById('lightbox-prev').disabled=visibleWorks.length<2;document.getElementById('lightbox-next').disabled=visibleWorks.length<2;}
+document.getElementById('works-grid').addEventListener('click',e=>{const button=e.target.closest('[data-work]');if(!button)return;lastFocus=button;showWork(visibleWorks.findIndex(w=>w.index===Number(button.dataset.work)));lightbox.showModal();document.body.style.overflow='hidden';document.getElementById('lightbox-close').focus();});
+document.getElementById('lightbox-close').onclick=()=>lightbox.close();lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.close();});lightbox.addEventListener('close',()=>{document.body.style.overflow='';lastFocus?.focus();});document.getElementById('lightbox-prev').onclick=()=>showWork(currentWork-1);document.getElementById('lightbox-next').onclick=()=>showWork(currentWork+1);lightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();showWork(currentWork-1);}if(e.key==='ArrowRight'){e.preventDefault();showWork(currentWork+1);}});
+let startX=0,startY=0;const stage=document.querySelector('.lightbox-image-wrap');stage.addEventListener('touchstart',e=>{if(e.touches.length===1){startX=e.touches[0].clientX;startY=e.touches[0].clientY;}else startX=null;},{passive:true});stage.addEventListener('touchend',e=>{if(startX===null)return;const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)showWork(currentWork+(dx<0?1:-1));},{passive:true});
+
+
+// Keep this preference on this browser between visits.
+function applyTheme(theme){
+ document.documentElement.dataset.theme=theme;
+ document.querySelectorAll('[data-theme-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===theme)));
+ try{localStorage.setItem('onuri-theme',theme);}catch(e){}
+}
+document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>applyTheme(button.dataset.themeChoice)));
+applyTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
