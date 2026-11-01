@@ -35,15 +35,15 @@ const worksMeta = {
     description: "사진을 입체적인 빛으로 표현한 리쏘페인 작품"
   },
   5: {
-    title: "Resin Art",
-    category: "resin",
-    tags: ["RESIN", "UV RESIN"],
-    description: "UV 레진으로 완성한 컬러풀한 창작 작품"
+    title: "Bloom Keepsake Box",
+    category: "3d",
+    tags: ["3D PRINT","RESIN"],
+    description: "꽃무늬 입체 패턴의 3D 프린팅 소품함에 레진 장식을 더한 소재융합 메이킹"
   },
   6: {
     title: "Resin Art",
     category: "resin",
-    tags: ["RESIN", "UV RESIN"],
+    tags: ["RESIN"],
     description: "UV 레진으로 완성한 컬러풀한 창작 작품2"
   },
   7: {
@@ -59,10 +59,10 @@ const worksMeta = {
     description: "목공 블루투스 스피커에 레이저로 캐릭터를 각인해, 나무의 따뜻한 질감과 나만의 개성을 담은 오디오"
   },
   9: {
-    title: "My Personal Statue",
+    title: "Korean Heritage Resin Keyrings",
     category: "3d",
-    tags: ["AI", "3D PRINTING", "캐릭터"],
-    description: "나의 모습을 입체 조형으로 구현하고 3D 프린터로 출력해 완성한 세상에 하나뿐인 나만의 동상"
+    tags: ["3D PRINT","RESIN"],
+    description: "전통 문양에 자개 느낌의 조각과 레진 장식을 조합해 한국적인 아름다움을 담은 소재융합 메이킹"
   },
   10: {
     title: "Custom Pencil Holder",
