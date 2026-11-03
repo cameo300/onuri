@@ -23,6 +23,7 @@
 <title>김현미 | Digital Maker · AI Instructor</title>
 <link href="css/style.css?v=20261101-logo" rel="stylesheet"/>
 <link rel="icon" type="image/png" href="image/onuri-logo.png"/>
+<link rel="stylesheet" href="css/audio-player.css?v=20261103-compact"/>
 </head>
 <body>
 <header class="site-header">
@@ -127,6 +128,25 @@
 <p class="closing">Imagine it. Make it. Share it.</p>
 </section>
 </main>
+<aside class="music-player" id="music-player" aria-label="작업실 음악 플레이어">
+  <div class="music-header"><span>작업실 음악 · <strong id="music-compact-title">한옥의 아침</strong></span><button type="button" id="music-collapse" aria-expanded="true" aria-controls="music-body">접기</button></div>
+  <div id="music-body">
+    <div class="music-now"><strong id="music-title">한옥의 아침</strong><span id="music-mood"></span></div>
+    <div class="music-controls">
+      <button type="button" id="music-prev" aria-label="이전 곡">⏮</button>
+      <button type="button" id="music-play" aria-label="재생">▶</button>
+      <button type="button" id="music-stop" aria-label="정지">■</button>
+      <button type="button" id="music-next" aria-label="다음 곡">⏭</button>
+      <label class="music-repeat">반복<select id="music-repeat"><option value="all">전체 순서 반복</option><option value="one">한 곡 반복</option></select></label>
+    </div>
+    <input id="music-seek" type="range" min="0" max="1000" value="0" aria-label="재생 위치" disabled/>
+    <div class="music-settings"><span id="music-time">0:00 / 0:00</span><button type="button" id="music-mute" aria-pressed="false">음소거</button><input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.05" aria-label="음량"/></div>
+    <p id="music-status" role="status" aria-live="polite"></p>
+    <details class="music-playlist"><summary>곡 목록 · 6곡</summary><ol id="music-list"></ol></details>
+  </div>
+  <audio preload="metadata"></audio>
+</aside>
+<script src="js/audio-player.js?v=20261103-compact"></script>
 <footer>© 2026 Onuri · Digital Maker · AI Instructor</footer>
 <dialog aria-labelledby="lightbox-title" id="lightbox"><div class="lightbox-top"><span id="lightbox-count"></span><div><a id="lightbox-original" rel="noopener" target="_blank">원본 보기 ↗</a><button aria-label="확대 보기 닫기" id="lightbox-close">✕</button></div></div><div class="lightbox-stage"><button aria-label="이전 작품" id="lightbox-prev">‹</button><div class="lightbox-image-wrap"><img alt="" id="lightbox-img"/></div><button aria-label="다음 작품" id="lightbox-next">›</button></div><div class="lightbox-caption"><h2 id="lightbox-title"></h2><p id="lightbox-desc"></p><span>← → 이전·다음 · ESC 닫기 · 좌우로 밀어서 이동</span></div></dialog><script src="js/works.js"></script><script src="js/script.js?v=20261028"></script></body>
 </html>

@@ -1,0 +1,31 @@
+.music-player{position:fixed;right:24px;bottom:20px;z-index:15;width:370px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 110px);overflow:auto;border:1px solid var(--line);border-radius:20px;background:var(--white);color:var(--ink);box-shadow:var(--shadow);padding:14px 16px;font-size:13px}
+.music-player button,.music-player select{font:inherit;color:inherit;cursor:pointer}
+.music-player button{border:1px solid var(--line);border-radius:10px;background:var(--cream);min-height:44px;padding:6px 10px}
+.music-player button:disabled{opacity:.55;cursor:default}
+.music-player button:focus-visible,.music-player summary:focus-visible,.music-player input:focus-visible,.music-player select:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.music-header{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}
+.music-header>span{min-width:0}.music-header strong{font-size:12px}
+.music-header button{flex-shrink:0}
+.music-now{display:flex;flex-direction:column;margin:8px 0 12px}.music-now strong{font-size:17px}.music-now span{font-size:12px;color:var(--muted)}
+.music-controls{display:flex;align-items:center;gap:6px}.music-controls>button{width:44px;flex-shrink:0;font-size:17px;padding:4px}
+.music-controls #music-play{background:var(--saffron);color:#123f43;border-color:var(--saffron)}
+.music-repeat{display:flex;flex-direction:column;gap:2px;font-size:10px;min-width:0;margin-left:auto}.music-repeat select{width:100%;max-width:130px;min-height:36px;background:var(--cream);border:1px solid var(--line);border-radius:8px;font-size:11px}
+.music-player input[type=range]{accent-color:var(--mint);min-height:24px;cursor:pointer}.music-player #music-seek{display:block;width:100%;margin:12px 0 0}
+.music-settings{display:flex;align-items:center;gap:8px;font-size:11px;font-variant-numeric:tabular-nums}.music-settings>span{margin-right:auto}.music-settings input{width:80px;min-width:0}.music-settings button{font-size:11px}
+#music-status{font-size:12px;color:var(--muted);margin:6px 0}#music-status:empty{display:none}
+.music-playlist{max-width:none;border-top:1px solid var(--line);margin-top:10px;padding-top:6px}.music-playlist summary{max-width:none;min-height:44px;display:flex;align-items:center;justify-content:space-between;font-size:12px}.music-playlist summary::after{content:'＋'}.music-playlist[open] summary::after{content:'−'}
+.music-playlist ol{list-style:none;margin:0;padding:0;max-height:240px;overflow:auto;overscroll-behavior:contain}.music-playlist li+li{margin-top:5px}.music-player .music-track{display:flex;flex-direction:column;text-align:left;width:100%;padding:9px 12px;gap:2px}.music-track strong{font-size:12px}.music-track span{font-size:11px;color:var(--muted)}.music-player .music-track[aria-current=true]{background:var(--saffron-soft);border-color:var(--saffron);box-shadow:inset 3px 0 var(--saffron)}
+.music-player [hidden]{display:none!important}
+body{padding-bottom:260px}
+@media(max-width:650px){.music-player{right:10px;bottom:max(10px,env(safe-area-inset-bottom));max-width:none;width:calc(100% - 20px);padding:10px 12px;border-radius:16px;max-height:calc(100dvh - 90px);overflow:auto}.music-controls{gap:5px}.music-controls>button{width:44px}.music-playlist ol{max-height:180px}.music-settings input{width:70px}.music-repeat select{font-size:10px}.music-now{margin:5px 0 8px}}
+
+/* Compact footprint; keep transport buttons easy to tap. */
+.music-player{width:310px;padding:8px 10px;border-radius:14px;right:16px;bottom:14px}
+.music-header{font-size:10px}.music-header>span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.music-header strong{font-size:11px}
+.music-header button{min-height:32px;padding:3px 8px;font-size:11px}
+.music-now{margin:3px 0 6px}.music-now strong{font-size:14px}.music-now span{font-size:10px}
+.music-controls{gap:3px}.music-controls>button{width:40px;min-height:40px;font-size:15px}
+.music-repeat select{max-width:107px;min-height:32px;font-size:10px}
+.music-player #music-seek{margin-top:4px}.music-settings{gap:5px;font-size:10px}.music-settings button{min-height:32px;padding:3px 7px}.music-settings input{width:64px}
+.music-playlist{margin-top:4px;padding-top:0}.music-playlist summary{min-height:36px;font-size:11px}.music-playlist ol{max-height:180px}
+@media(max-width:650px){.music-player{right:8px;bottom:max(8px,env(safe-area-inset-bottom));width:310px;max-width:calc(100% - 16px)}.music-controls>button{min-height:44px;width:40px}.music-track{min-height:48px}}
