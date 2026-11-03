@@ -16,6 +16,12 @@
 .music-playlist{max-width:none;border-top:1px solid var(--line);margin-top:10px;padding-top:6px}.music-playlist summary{max-width:none;min-height:44px;display:flex;align-items:center;justify-content:space-between;font-size:12px}.music-playlist summary::after{content:'＋'}.music-playlist[open] summary::after{content:'−'}
 .music-playlist ol{list-style:none;margin:0;padding:0;max-height:240px;overflow:auto;overscroll-behavior:contain}.music-playlist li+li{margin-top:5px}.music-player .music-track{display:flex;flex-direction:column;text-align:left;width:100%;padding:9px 12px;gap:2px}.music-track strong{font-size:12px}.music-track span{font-size:11px;color:var(--muted)}.music-player .music-track[aria-current=true]{background:var(--saffron-soft);border-color:var(--saffron);box-shadow:inset 3px 0 var(--saffron)}
 .music-player [hidden]{display:none!important}
+.music-player button{-webkit-appearance:none;appearance:none;touch-action:manipulation;display:inline-flex;align-items:center;justify-content:center}
+.music-player button svg{display:block;width:20px;height:20px;flex-shrink:0}
+.music-controls{justify-content:center}
+.music-header-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.music-controls #music-repeat[aria-pressed=true],.music-controls #music-shuffle[aria-pressed=true]{background:var(--saffron-soft);border-color:var(--saffron);color:var(--ink)}
+.music-credit{margin:6px 0 0;text-align:right;font-size:10px;color:var(--muted)}
 body{padding-bottom:260px}
 @media(max-width:650px){.music-player{right:10px;bottom:max(10px,env(safe-area-inset-bottom));max-width:none;width:calc(100% - 20px);padding:10px 12px;border-radius:16px;max-height:calc(100dvh - 90px);overflow:auto}.music-controls{gap:5px}.music-controls>button{width:44px}.music-playlist ol{max-height:180px}.music-settings input{width:70px}.music-repeat select{font-size:10px}.music-now{margin:5px 0 8px}}
 

@@ -18,7 +18,7 @@ function setup(saved = null, missing = []) {
   audio.play = async () => { audio.paused = false; audio.plays++; audio.emit('play'); };
   audio.pause = () => { audio.paused = true; audio.emit('pause'); };
   audio.load = () => { audio.currentTime = 0; };
-  const ids = ['list','title','mood','play','mute','volume','repeat','compact-title','seek','time','status','stop','prev','next','collapse','body'];
+  const ids = ['list','title','mood','play','mute','volume','repeat','playlist','shuffle','compact-title','seek','time','status','stop','prev','next','collapse','body'];
   const elements = Object.fromEntries(ids.map(id => [id, new Element()]));
   const root = { querySelector: selector => selector === 'audio' ? audio : elements[selector.slice(7)] };
   const storage = new Map(saved ? [['onuri-music', JSON.stringify(saved)]] : []);
@@ -31,6 +31,34 @@ function setup(saved = null, missing = []) {
   return { audio, elements, storage, click: id => elements[id].emit('click'), track: i => elements.list.children[i].children[0] };
 }
 const tick = () => new Promise(resolve => setImmediate(resolve));
+
+test('repeat off stops at last song and mode buttons persist', async () => {
+  const p = setup({ file: 'Bamboo_Courtyard_Noon.mp3', repeat: 'off' });
+  p.click('play'); await tick();
+  const plays = p.audio.plays;
+  p.audio.emit('ended'); await tick();
+  assert.equal(p.audio.plays, plays);
+  assert.equal(p.audio.paused, true);
+  p.click('repeat');
+  assert.equal(JSON.parse(p.storage.get('onuri-music')).repeat, 'all');
+  p.click('shuffle');
+  assert.equal(JSON.parse(p.storage.get('onuri-music')).shuffle, true);
+});
+
+test('shuffle visits every song once without repeating when repeat is off', async () => {
+  const p = setup({ repeat: 'off', shuffle: true });
+  p.click('play'); await tick();
+  const visited = new Set([p.audio.src]);
+  for (let i = 0; i < 5; i++) {
+    p.audio.emit('ended'); await tick();
+    assert.equal(visited.has(p.audio.src), false);
+    visited.add(p.audio.src);
+  }
+  p.audio.emit('ended'); await tick();
+  assert.equal(visited.size, 6);
+  assert.equal(p.audio.paused, true);
+  assert.equal(p.audio.plays, 6);
+});
 
 test('restores valid selection/volume without autoplay and uses repository subpath', () => {
   const p = setup({ file: 'moonlight-palace.mp3', volume: 0.3, volumeVersion: 2 });
@@ -61,7 +89,7 @@ test('all-repeat wraps and single-repeat stays on the same song', async () => {
   p.click('play'); await tick();
   p.audio.emit('ended'); await tick();
   assert.match(p.audio.src, /hanok-morning/);
-  p.elements.repeat.value = 'one'; p.elements.repeat.emit('change');
+  p.click('repeat');
   p.audio.currentTime = 120; p.audio.emit('ended'); await tick();
   assert.match(p.audio.src, /hanok-morning/);
   assert.equal(p.audio.currentTime, 0);
@@ -85,8 +113,11 @@ test('volume persists, seek and collapse controls remain usable', () => {
   p.elements.seek.value = '500'; p.elements.seek.emit('change');
   assert.equal(p.audio.currentTime, 60);
   p.click('mute'); assert.equal(p.audio.muted, true);
-  p.click('collapse'); assert.equal(p.elements.body.hidden, true);
+  assert.equal(p.elements.body.hidden, true);
+  assert.equal(p.elements.collapse.attrs['aria-expanded'], 'false');
+  assert.equal(p.elements.playlist.open, false);
   p.click('collapse'); assert.equal(p.elements.body.hidden, false);
+  p.click('collapse'); assert.equal(p.elements.body.hidden, true);
 });
 
 test('quiet default migrates old volume and removed track without autoplay', () => {

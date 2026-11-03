@@ -16,7 +16,16 @@
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (_) {}
   let current = Math.max(0, tracks.findIndex(track => track.file === saved.file));
-  let repeat = saved.repeat === 'one' ? 'one' : 'all';
+  let repeat = ['all', 'one', 'off'].includes(saved.repeat) ? saved.repeat : 'all';
+  let shuffle = saved.shuffle === true;
+  let shuffleBag = [];
+  const history = [];
+  const svg = body => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+  const repeatIcon = '<path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4m14-1v2a3 3 0 0 1-3 3H3"/>';
+  el('prev').innerHTML = svg('<path d="M6 5v14M19 5 8 12l11 7Z" fill="currentColor" stroke="none"/><path d="M5 5v14"/>');
+  el('next').innerHTML = svg('<path d="m5 5 11 7-11 7Z" fill="currentColor" stroke="none"/><path d="M19 5v14"/>');
+  el('stop').innerHTML = svg('<rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" stroke="none"/>');
+  el('shuffle').innerHTML = svg('<path d="m18 3 3 3-3 3M3 6h3c5 0 7 12 12 12h3m-3-3 3 3-3 3M3 18h3c2 0 4-3 6-6s4-6 6-6h3"/>');
   let generation = 0;
   let wantsPlay = false;
   let seeking = false;
@@ -25,7 +34,7 @@
     ? Math.min(1, Math.max(0, saved.volume)) : 0.05;
   const urls = tracks.map(track => new URL(`audio/${track.file}`, document.baseURI).href);
   const persist = () => {
-    try { localStorage.setItem(key, JSON.stringify({ file: tracks[current].file, volume: audio.volume, volumeVersion: 2, repeat })); } catch (_) {}
+    try { localStorage.setItem(key, JSON.stringify({ file: tracks[current].file, volume: audio.volume, volumeVersion: 2, repeat, shuffle })); } catch (_) {}
   };
   const clock = value => {
     if (!Number.isFinite(value)) return '0:00';
@@ -52,13 +61,18 @@
   function update() {
     el('title').textContent = tracks[current].title;
     el('mood').textContent = tracks[current].mood;
-    el('play').textContent = audio.paused ? '▶' : 'Ⅱ';
+    el('play').innerHTML = svg(audio.paused ? '<path d="m8 5 11 7-11 7Z" fill="currentColor" stroke="none"/>' : '<path d="M8 5v14m8-14v14" stroke-width="4"/>');
     el('play').setAttribute('aria-label', audio.paused ? '재생' : '일시정지');
     el('play').disabled = tracks[current].missing === true;
     el('mute').textContent = audio.muted ? '음소거 해제' : '음소거';
     el('mute').setAttribute('aria-pressed', String(audio.muted));
     el('volume').value = audio.volume;
-    el('repeat').value = repeat;
+    const repeatLabels = { all: '전체 반복', one: '한 곡 반복', off: '반복 끄기' };
+    el('repeat').innerHTML = svg(repeatIcon + (repeat === 'one' ? '<path d="m10 10 2-1v6m-2 0h4"/>' : repeat === 'off' ? '<path d="m4 3 16 18"/>' : ''));
+    el('repeat').setAttribute('aria-label', `${repeatLabels[repeat]} · 눌러서 변경`);
+    el('repeat').setAttribute('title', repeatLabels[repeat]);
+    el('repeat').setAttribute('aria-pressed', String(repeat !== 'off'));
+    el('shuffle').setAttribute('aria-pressed', String(shuffle));
     el('compact-title').textContent = tracks[current].title;
   }
   async function play() {
@@ -89,6 +103,15 @@
     if (autoplay && !tracks[current].missing) void play();
   }
   function move(direction, autoplay = wantsPlay) {
+    if (shuffle) {
+      if (direction < 0 && history.length) { select(history.pop(), autoplay); return; }
+      shuffleBag = shuffleBag.filter(index => index !== current && !tracks[index].missing);
+      if (!shuffleBag.length) shuffleBag = tracks.map((_, index) => index).filter(index => index !== current && !tracks[index].missing);
+      if (shuffleBag.length) {
+        const index = shuffleBag.splice(Math.floor(Math.random() * shuffleBag.length), 1)[0];
+        history.push(current); select(index, autoplay); return;
+      }
+    }
     for (let step = 1; step <= tracks.length; step++) {
       const index = (current + direction * step + tracks.length) % tracks.length;
       if (!tracks[index].missing) { select(index, autoplay); return; }
@@ -111,7 +134,12 @@
   el('volume').addEventListener('input', event => {
     audio.volume = Number(event.target.value); audio.muted = false; persist(); update();
   });
-  el('repeat').addEventListener('change', event => { repeat = event.target.value; persist(); });
+  el('repeat').addEventListener('click', () => {
+    repeat = { all: 'one', one: 'off', off: 'all' }[repeat]; persist(); update();
+  });
+  el('shuffle').addEventListener('click', () => {
+    shuffle = !shuffle; shuffleBag = []; history.length = 0; persist(); update();
+  });
   el('seek').addEventListener('input', () => { seeking = true; });
   el('seek').addEventListener('change', event => {
     if (Number.isFinite(audio.duration)) audio.currentTime = audio.duration * Number(event.target.value) / 1000;
@@ -134,7 +162,18 @@
   audio.addEventListener('ended', () => {
     if (!wantsPlay) return;
     if (repeat === 'one') { audio.currentTime = 0; void play(); }
-    else move(1, true);
+    else if (repeat === 'off') {
+      if (shuffle) {
+        const visited = new Set([...history, current]);
+        shuffleBag = tracks.map((_, index) => index).filter(index => !visited.has(index) && !tracks[index].missing);
+        if (shuffleBag.length) move(1, true);
+        else { wantsPlay = false; audio.pause(); update(); }
+      } else {
+        const next = tracks.findIndex((track, index) => index > current && !track.missing);
+        if (next >= 0) select(next, true);
+        else { wantsPlay = false; audio.pause(); update(); }
+      }
+    } else move(1, true);
   });
   audio.addEventListener('error', () => {
     if (audio.error?.code === 1) return;
@@ -144,6 +183,10 @@
     renderList(); update();
     if (continuePlaying) move(1, true);
   });
+  el('playlist').open = false;
+  el('body').hidden = true;
+  el('collapse').setAttribute('aria-expanded', 'false');
+  el('collapse').textContent = '펼치기';
   select(current); // Restore selection and volume, never autoplay on a new visit.
   // Probe availability without additional audio elements; loading/playback still handles network failures.
   if (location.protocol !== 'file:') {
