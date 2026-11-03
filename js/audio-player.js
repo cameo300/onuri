@@ -63,9 +63,9 @@
     el('mood').textContent = tracks[current].mood;
     el('play').innerHTML = svg(audio.paused ? '<path d="m8 5 11 7-11 7Z" fill="currentColor" stroke="none"/>' : '<path d="M8 5v14m8-14v14" stroke-width="4"/>');
     el('play').setAttribute('aria-label', audio.paused ? '재생' : '일시정지');
+    el('play').setAttribute('title', audio.paused ? '재생' : '일시정지');
+    el('play').setAttribute('aria-pressed', String(!audio.paused));
     el('play').disabled = tracks[current].missing === true;
-    el('mute').textContent = audio.muted ? '음소거 해제' : '음소거';
-    el('mute').setAttribute('aria-pressed', String(audio.muted));
     el('volume').value = audio.volume;
     const repeatLabels = { all: '전체 반복', one: '한 곡 반복', off: '반복 끄기' };
     el('repeat').innerHTML = svg(repeatIcon + (repeat === 'one' ? '<path d="m10 10 2-1v6m-2 0h4"/>' : repeat === 'off' ? '<path d="m4 3 16 18"/>' : ''));
@@ -130,7 +130,6 @@
   });
   el('prev').addEventListener('click', () => move(-1));
   el('next').addEventListener('click', () => move(1));
-  el('mute').addEventListener('click', () => { audio.muted = !audio.muted; });
   el('volume').addEventListener('input', event => {
     audio.volume = Number(event.target.value); audio.muted = false; persist(); update();
   });
@@ -149,7 +148,9 @@
     const collapsed = !el('body').hidden;
     el('body').hidden = collapsed;
     el('collapse').setAttribute('aria-expanded', String(!collapsed));
-    el('collapse').textContent = collapsed ? '펼치기' : '접기';
+    el('collapse').innerHTML = svg(collapsed ? '<path d="m6 9 6 6 6-6"/>' : '<path d="m6 15 6-6 6 6"/>');
+    el('collapse').setAttribute('aria-label', collapsed ? '플레이어 펼치기' : '플레이어 접기');
+    el('collapse').setAttribute('title', collapsed ? '펼치기' : '접기');
   });
   audio.addEventListener('play', update);
   audio.addEventListener('pause', update);
@@ -186,7 +187,9 @@
   el('playlist').open = false;
   el('body').hidden = true;
   el('collapse').setAttribute('aria-expanded', 'false');
-  el('collapse').textContent = '펼치기';
+  el('collapse').innerHTML = svg('<path d="m6 9 6 6 6-6"/>');
+  el('collapse').setAttribute('aria-label', '플레이어 펼치기');
+  el('collapse').setAttribute('title', '펼치기');
   select(current); // Restore selection and volume, never autoplay on a new visit.
   // Probe availability without additional audio elements; loading/playback still handles network failures.
   if (location.protocol !== 'file:') {

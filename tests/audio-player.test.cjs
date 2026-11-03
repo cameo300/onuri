@@ -112,7 +112,10 @@ test('volume persists, seek and collapse controls remain usable', () => {
   assert.equal(JSON.parse(p.storage.get('onuri-music')).volume, 0.8);
   p.elements.seek.value = '500'; p.elements.seek.emit('change');
   assert.equal(p.audio.currentTime, 60);
-  p.click('mute'); assert.equal(p.audio.muted, true);
+  p.click('play');
+  assert.equal(p.elements.play.attrs['aria-label'], '일시정지');
+  p.click('play');
+  assert.equal(p.elements.play.attrs['aria-label'], '재생');
   assert.equal(p.elements.body.hidden, true);
   assert.equal(p.elements.collapse.attrs['aria-expanded'], 'false');
   assert.equal(p.elements.playlist.open, false);
